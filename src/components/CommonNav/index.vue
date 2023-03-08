@@ -86,7 +86,7 @@ const onClickRight = () => {
   }
 
   :deep(.van-icon) {
-    color: #fff;
+    color: rgb(66,66,66);
   }
 }
 .van-hairline--bottom:after {
