@@ -1,31 +1,34 @@
 <template>
   <div class="page-tab">
-    <router-view/>
+    <router-view />
   </div>
-  <van-tabbar v-model="active">
+  <van-tabbar v-model="active" class="my-tabbar">
     <van-tabbar-item
-        replace
-        :to="route.path"
-        v-for="(route, index) in homeRouters"
-        :key="index"
+      replace
+      :to="route.path"
+      v-for="(route, index) in homeRouters"
+      :key="index"
     >
       {{ t(route.meta.title) }}
       <template #icon>
-        <van-icon class="menu-icon" :name="route.meta.icon_select" v-if="active == index"/>
-        <van-icon class="menu-icon" :name="route.meta.icon" v-else/>
+        <van-icon
+          class="menu-icon"
+          :name="route.meta.icon_select"
+          v-if="active == index"
+        />
+        <van-icon class="menu-icon" :name="route.meta.icon" v-else />
       </template>
     </van-tabbar-item>
   </van-tabbar>
-
 </template>
 
 <script setup lang="ts">
-import {onMounted, computed} from "vue";
-import {homeRouters} from "../router/modules/home";
-import {useRouter} from "vue-router";
-import {useI18n} from "vue-i18n";
+import { onMounted, computed } from "vue";
+import { homeRouters } from "../router/modules/home";
+import { useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
 
-const {t} = useI18n();
+const { t } = useI18n();
 const router = useRouter();
 const activeRoute = computed(() => {
   return router.currentRoute.value.path;
@@ -35,13 +38,10 @@ const active = computed({
   get() {
     return homeRouters.findIndex((item) => item.path === activeRoute.value);
   },
-  set() {
-  },
+  set() {},
 });
 
-
-onMounted(() => {
-});
+onMounted(() => {});
 </script>
 
 <style lang="scss" scoped>
