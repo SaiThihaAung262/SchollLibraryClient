@@ -12,20 +12,11 @@ export const useHomeStore = defineStore("home-store", {
     };
   },
   actions: {
-    async getArticleData(): Promise<ArticleData> {
-      return await getArticles().then((res) => {
-        this.articleData = {
-          list: res.data.list,
-          total: res.data.total,
-        };
-        return res.data;
-      });
+    setLanguage(data: string) {
+      this.lang = data;
     },
-    setLanguage(data : string) {
-      this.lang = data
+    setTheme(data: string) {
+      this.theme = data;
     },
-    setTheme(data: string){
-      this.theme = data
-    }
   },
 });

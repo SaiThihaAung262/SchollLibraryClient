@@ -3,20 +3,21 @@
     <Nav title="Details" />
     <div class="top-con">
       <div class="left-con">
-        <h1 class="book-title">The Song of Achilles</h1>
+        <h1 class="book-title">{{ bookDetial.title }}</h1>
         <div class="foot">
-          <p class="book-author">By Madeline Miller</p>
-          <p class="publish-date">Published Auguest 28 2022</p>
-          <p class="available">Available : <span class="ava-count">0</span></p>
+          <p class="book-author">By {{ bookDetial.author }}</p>
+          <!-- <p class="publish-date">Available date: Auguest 28 2022</p> -->
+          <p class="available">
+            Available :
+            <span class="ava-count">{{
+              bookDetial.available_qty - bookDetial.borrow_qty
+            }}</span>
+          </p>
         </div>
       </div>
       <div class="right-con">
         <div class="book-cover">
-          <img
-            src="https://m.media-amazon.com/images/I/81msb6gUBTL._AC_UF1000,1000_QL80_.jpg"
-            class="cover-img"
-            alt=""
-          />
+          <img :src="bookDetial.book_image" class="cover-img" alt="" />
         </div>
       </div>
     </div>
@@ -33,33 +34,53 @@
     </div>
 
     <div class="desc-con">
-      <h1 class="title">The Song of Achilles</h1>
+      <h1 class="title">{{ bookDetial.title }}</h1>
       <p class="summary">
-        Lorem Ipsum is simply dummy text of the printing and typesetting
-        industry. Lorem Ipsum has been the industry's standard dummy text ever
-        since the 1500s, when an unknown printer took a galley of type and
-        scrambled it to make a type specimen book. It has survived not only five
-        centuries, but also the leap into electronic typesetting, remaining
-        essentially unchanged. It was popularised in the 1960s with the release
-        of Letraset sheets containing Lorem Ipsum passages, and more recently
-        with desktop publishing software like Aldus PageMaker including versions
-        of Lorem Ipsum.
+        {{ bookDetial.summary }}
       </p>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, onMounted, reactive, toRefs } from "vue";
 // @ts-ignore
 import Nav from "../../../../components/CommonNav/index.vue";
+import { useRoute } from "vue-router";
+import { getBookDetails } from "../../../../api/other";
 export default defineComponent({
-  name: "login",
-  layout: "login",
+  name: "bookDetail",
+  layout: "bookDetail",
   components: {
     Nav,
   },
-  setup() {},
+  setup() {
+    const route = useRoute();
+    const state = reactive({
+      bookDetial: {} as any,
+      param: {
+        uuid: route.query.id,
+      },
+      loading: false,
+    });
+
+    const getBookDetail = () => {
+      state.loading = true;
+      getBookDetails(state.param).then((res) => {
+        if (res.err_code == 0) {
+          state.bookDetial = res.data;
+          state.loading = false;
+        }
+      });
+    };
+    onMounted(() => {
+      getBookDetail();
+    });
+
+    return {
+      ...toRefs(state),
+    };
+  },
 });
 </script>
 
@@ -83,6 +104,7 @@ export default defineComponent({
         font-weight: 500;
         font-size: px2rem(70);
         line-height: px2rem(90);
+        //text-transform: uppercase;
       }
       .foot {
         .available {
@@ -117,7 +139,7 @@ export default defineComponent({
           height: 100%;
           display: block;
           margin: 0 auto;
-          object-fit: contain;
+          object-fit: cover;
         }
       }
     }

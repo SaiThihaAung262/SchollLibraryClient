@@ -5,12 +5,12 @@
       <div class="profile-img-con">
         <img
           class="profile-img"
-          src="https://1fid.com/wp-content/uploads/2022/06/cartoon-profile-picture-5-1024x1024.jpg"
+          src="./../../assets/images/profile.gif"
           alt=""
         />
       </div>
-      <h2 class="name">Sai Thiha Aung</h2>
-      <p class="user-id">ID : LJ262199</p>
+      <h2 class="name">{{ userDetails.name }}</h2>
+      <p class="user-id">ID : {{ userDetails.uuid }}</p>
     </div>
 
     <div class="menu">
@@ -45,6 +45,10 @@ import ChangeLang from "./Components/changeLang.vue";
 // @ts-ignore
 import SwitchTheme from "./Components/switchTheme.vue";
 
+import { getUserDetail } from "../../api/user";
+import { useUserStore } from "../../store/useUserStore";
+import { log } from "console";
+
 export default defineComponent({
   name: "home",
   layout: "home",
@@ -55,34 +59,58 @@ export default defineComponent({
   },
 
   setup() {
+    const userStore = useUserStore();
     const state = reactive({
       menuItem: [
         {
           name: "History",
           icon: new URL(`./../../assets/images/history.png`, import.meta.url)
             .href,
-          to: "/exchangeRecord",
+          to: "/history",
         },
         {
           name: "Languages",
           icon: new URL(`./../../assets/images/language.png`, import.meta.url)
             .href,
-          to: "/rechargeRecord",
+          to: "/languages",
         },
         {
           name: "Theme",
           icon: new URL(`./../../assets/images/theme.png`, import.meta.url)
             .href,
-          to: "/gameRecord",
+          to: "/changeTheme",
         },
       ],
+      param: {
+        uuid: userStore.user.uuid,
+        type: userStore.user.user_type,
+      },
+
+      loading: false,
+      userDetails: {} as any,
     });
 
     const goToPage = (val: any) => {
       console.log(val);
     };
 
-    onMounted(() => {});
+    const getUserDetailData = () => {
+      state.loading = true;
+      getUserDetail(state.param).then((res) => {
+        if (res.err_code == 0) {
+          state.userDetails = res.data.user_data;
+          console.log(res.data);
+
+          state.loading = false;
+        }
+      });
+    };
+
+    onMounted(() => {
+      console.log(userStore.user);
+
+      getUserDetailData();
+    });
     return {
       ...toRefs(state),
       goToPage,

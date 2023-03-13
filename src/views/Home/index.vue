@@ -11,26 +11,29 @@
         @click="showCategoryPicker = true"
       />
     </div>
-    <div class="book-list-con">
-      <div
-        class="card"
-        v-for="item in 4"
-        :key="item"
-        @click="goToBookDetail(item)"
-      >
-        <div class="cover-img-con">
-          <img
-            class="cover-img"
-            src="https://josipmisko.com/img/books/Effective-TypeScript-9781492053712.jpg"
-            alt=""
-          />
-        </div>
-        <div class="card-footer">
-          <h2 class="book-title">Effective-Typescript</h2>
-          <p class="book-author">Josip Moskovic</p>
+    <van-list
+      v-model="loading"
+      finish-text="No more data"
+      :immediate-check="false"
+      @load="onload"
+    >
+      <div class="book-list-con">
+        <div
+          class="card"
+          v-for="item in bookLists"
+          :key="item"
+          @click="goToBookDetail(item.uuid)"
+        >
+          <div class="cover-img-con">
+            <img class="cover-img" :src="item.book_image" alt="" />
+          </div>
+          <div class="card-footer">
+            <h2 class="book-title">{{ item.title }}</h2>
+            <p class="book-author">{{ item.author }}</p>
+          </div>
         </div>
       </div>
-    </div>
+    </van-list>
   </div>
 
   <van-popup v-model:show="showCategoryPicker" round position="bottom">
@@ -38,7 +41,7 @@
       title="Categories"
       confirm-button-text="Confirm"
       cancel-button-text="Cancel"
-      :columns="categories"
+      :columns="categoryLists"
       @cancel="showCategoryPicker = false"
       @confirm="onConfirm"
     />
@@ -49,6 +52,7 @@
 import { defineComponent, toRefs, reactive, onMounted, computed } from "vue";
 import { useHomeStore } from "../../store/useHomeStore";
 import { ArticleInfo } from "../../types/index";
+import { getHomeBooks, getBookCategories } from "../../api/other";
 // @ts-ignore
 import Nav from "../../components/CommonNav/index.vue";
 import { useRouter, useRoute } from "vue-router";
@@ -66,28 +70,54 @@ export default defineComponent({
     const state = reactive({
       searchValue: "",
       showCategoryPicker: false,
-      articleList: [] as ArticleInfo[],
       totalArticle: 0,
-      categories: [
-        { text: "Computer & Tech", value: "1" },
-        { text: "Edu & Reference", value: "2" },
-        { text: "Art & Music", value: "3" },
-        { text: "Health & Fitnes", value: "4" },
-        { text: "Maine", value: "5" },
-      ],
+      categories: [] as any,
+      params: {
+        page: 1,
+        page_size: 6,
+        category_id: 0,
+      },
+      cateParam: {
+        page: 1,
+        page_size: 100,
+      },
+      bookLists: [] as any,
+      categoryLists: [] as any,
+      loading: false,
+      allowLoad: true,
+      totalPage: 0,
     });
 
-    const getHomeArticleList = () => {
-      homeStore.getArticleData().then((res) => {
-        state.articleList = res.list;
-        state.totalArticle = res.total;
+    const getHomeBookLists = () => {
+      state.allowLoad = false;
+      state.loading = true;
+      getHomeBooks(state.params).then((res) => {
+        if (res.err_code == 0) {
+          state.bookLists = state.bookLists.concat(res.data.list);
+          state.totalPage =
+            (res.data.total + state.params.page_size - 1) /
+            state.params.page_size;
+          state.allowLoad = true;
+          state.loading = false;
+        }
+      });
+    };
+
+    const getCategoryLists = () => {
+      getBookCategories(state.cateParam).then((res) => {
+        state.categories = res.data.list;
+        state.categories.map((item: any) => {
+          state.categoryLists.push({ value: item.id, text: item.title });
+        });
       });
     };
 
     const onConfirm = (data: any) => {
       state.showCategoryPicker = false;
       state.searchValue = data.selectedOptions[0].text;
+      state.params.category_id = data.selectedValues[0];
       console.log(data.selectedValues[0]);
+      getHomeBookLists();
     };
 
     const goToBookDetail = (val: any) => {
@@ -100,13 +130,29 @@ export default defineComponent({
       });
     };
 
+    const onload = () => {
+      console.log("here is on load");
+      if (state.allowLoad) {
+        state.loading = true;
+        if (state.params.page < state.totalPage) {
+          state.params.page++;
+          getHomeBookLists();
+          return;
+        } else {
+          state.loading = false;
+        }
+      }
+    };
+
     onMounted(() => {
-      getHomeArticleList();
+      getHomeBookLists();
+      getCategoryLists();
     });
     return {
       ...toRefs(state),
       onConfirm,
       goToBookDetail,
+      onload,
     };
   },
 });
@@ -119,14 +165,18 @@ export default defineComponent({
   overflow-x: hidden;
   overflow-y: scroll;
   position: relative;
+
   .filter-con {
     border-radius: px2rem(10);
-    width: 95%;
+    width: 100%;
     position: fixed;
-    top: 7.7%;
+    top: 7.6%;
     left: 50%;
     transform: translate(-50%, -50%);
+    background: var(--home-bg);
     .category-field {
+      width: 95%;
+      margin: 0 auto;
       border-radius: px2rem(10);
       background: rgba(239, 239, 239, 1);
     }

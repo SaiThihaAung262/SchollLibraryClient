@@ -1,6 +1,6 @@
 import { App } from "vue";
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
-// import { createRouterGuards } from "./routerGuards";
+import { createRouterGuards } from "./routerGuard";
 import { homeRoute } from "./modules/home";
 import { other } from "./modules/other";
 
@@ -24,6 +24,6 @@ const router = createRouter({
 
 export function setupRouter(app: App) {
   app.use(router);
-  //   createRouterGuards(router);
+  createRouterGuards(router);
 }
 export default router;
