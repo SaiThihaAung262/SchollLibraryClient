@@ -45,9 +45,9 @@ import ChangeLang from "./Components/changeLang.vue";
 // @ts-ignore
 import SwitchTheme from "./Components/switchTheme.vue";
 
-import { getUserDetail } from "../../api/user";
-import { useUserStore } from "../../store/useUserStore";
-import { log } from "console";
+import { getUserDetail } from "./../../api/user";
+import { useUserStore } from "./../../store/useUserStore";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "home",
@@ -60,24 +60,33 @@ export default defineComponent({
 
   setup() {
     const userStore = useUserStore();
+    const router = useRouter();
     const state = reactive({
       menuItem: [
         {
-          name: "History",
+          name: "Borrow History",
           icon: new URL(`./../../assets/images/history.png`, import.meta.url)
             .href,
-          to: "/history",
+          to: "/borrowHistory",
         },
         {
-          name: "Languages",
+          name: "Change Languages",
           icon: new URL(`./../../assets/images/language.png`, import.meta.url)
             .href,
           to: "/languages",
         },
         {
-          name: "Theme",
+          name: "Change Theme",
           icon: new URL(`./../../assets/images/theme.png`, import.meta.url)
             .href,
+          to: "/changeTheme",
+        },
+        {
+          name: "Change password",
+          icon: new URL(
+            `./../../assets/images/password_icon.png`,
+            import.meta.url
+          ).href,
           to: "/changeTheme",
         },
       ],
@@ -92,6 +101,7 @@ export default defineComponent({
 
     const goToPage = (val: any) => {
       console.log(val);
+      router.push(val);
     };
 
     const getUserDetailData = () => {
@@ -99,16 +109,12 @@ export default defineComponent({
       getUserDetail(state.param).then((res) => {
         if (res.err_code == 0) {
           state.userDetails = res.data.user_data;
-          console.log(res.data);
-
           state.loading = false;
         }
       });
     };
 
     onMounted(() => {
-      console.log(userStore.user);
-
       getUserDetailData();
     });
     return {

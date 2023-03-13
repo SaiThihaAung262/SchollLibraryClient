@@ -11,3 +11,7 @@ export function getBookCategories(params: any) {
 export function getBookDetails(params: any) {
   return get("/user/get-book-detail", params);
 }
+
+export function getBorrowHistory(params: any) {
+  return get("/user/get-borrow-history", params);
+}

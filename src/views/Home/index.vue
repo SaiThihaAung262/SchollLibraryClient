@@ -123,7 +123,7 @@ export default defineComponent({
     const goToBookDetail = (val: any) => {
       console.log(val);
       router.push({
-        path: "/BookDetails",
+        path: "/bookDetails",
         query: {
           id: val,
         },

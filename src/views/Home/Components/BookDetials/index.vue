@@ -45,9 +45,9 @@
 <script lang="ts">
 import { defineComponent, onMounted, reactive, toRefs } from "vue";
 // @ts-ignore
-import Nav from "../../../../components/CommonNav/index.vue";
+import Nav from "./../../../../components/CommonNav/index.vue";
 import { useRoute } from "vue-router";
-import { getBookDetails } from "../../../../api/other";
+import { getBookDetails } from "./../../../../api/other";
 export default defineComponent({
   name: "bookDetail",
   layout: "bookDetail",

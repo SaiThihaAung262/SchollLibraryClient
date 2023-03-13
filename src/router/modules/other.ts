@@ -14,9 +14,14 @@ export const other: Array<RouteRecordRaw> = [
   },
 
   {
-    path: "/BookDetails",
-    name: "BookDetails",
+    path: "/bookDetails",
+    name: "bookDetails",
     component: () =>
       import("../../views/Home/Components/BookDetials/index.vue"),
+  },
+  {
+    path: "/borrowHistory",
+    name: "borrowHistory",
+    component: () => import("../../views/Account/Components/borrowHistory.vue"),
   },
 ];
