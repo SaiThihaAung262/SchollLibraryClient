@@ -15,3 +15,6 @@ export function getBookDetails(params: any) {
 export function getBorrowHistory(params: any) {
   return get("/user/get-borrow-history", params);
 }
+export const borrowBook = (data: any) => {
+  return post("/user/borrow-book", data);
+};

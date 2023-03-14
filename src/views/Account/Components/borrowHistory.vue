@@ -14,6 +14,7 @@
           </div>
           <div class="mid-con">
             <p class="book-title">{{ item.book_data.title }}</p>
+            <p class="borrow-time">{{ setOriginDate(item.created_at) }}</p>
           </div>
           <div class="right-con">
             <van-tag type="warning" size="large" v-if="item.status == 1"
@@ -36,6 +37,7 @@ import Nav from "./../../../components/CommonNav/index.vue";
 import { useRoute } from "vue-router";
 import { getBorrowHistory } from "./../../../api/other";
 import { useUserStore } from "./../../../store/useUserStore";
+import { setOriginDate } from "./../../../utils/timeformat";
 
 export default defineComponent({
   name: "bookDetail",
@@ -93,6 +95,7 @@ export default defineComponent({
     return {
       ...toRefs(state),
       onload,
+      setOriginDate,
     };
   },
 });
@@ -129,10 +132,16 @@ export default defineComponent({
       .mid-con {
         width: 60%;
         display: flex;
+        flex-direction: column;
         align-items: top;
         // background: red;
         .book-title {
           font-size: px2rem(44);
+          font-weight: 300;
+          line-height: px2rem(55);
+        }
+        .borrow-time {
+          font-size: px2rem(28);
           font-weight: 300;
           line-height: px2rem(55);
         }

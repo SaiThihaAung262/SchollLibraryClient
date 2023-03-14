@@ -37,6 +37,10 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   //Success response
   (res) => {
+    if (res.data.err_code === 888) {
+      showNotify("You already borrow this book!");
+      return Promise.reject(res.data);
+    }
     if (res.data.err_code != 0) {
       showNotify(res.data.err_msg);
       return Promise.reject(res.data);

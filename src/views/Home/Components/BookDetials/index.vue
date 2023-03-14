@@ -25,7 +25,7 @@
     <div class="mid-con">
       <div class="left-con">
         <h2 class="read">Reads</h2>
-        <p class="read-count">6000</p>
+        <p class="read-count">{{ borrow_count }}</p>
       </div>
       <div class="right-con">
         <h2 class="chapter">Available</h2>
@@ -39,8 +39,63 @@
       <h1 class="title">{{ bookDetial.title }}</h1>
       <p class="summary">
         {{ bookDetial.summary }}
+        <!-- Lorem Ipsum is simply dummy text of the printing and typesetting
+        industry. Lorem Ipsum has been the industry's standard dummy text ever
+        since the 1500s, when an unknown printer took a galley of type and
+        scrambled it to make a type specimen book. It has survived not only five
+        centuries, but also the leap into electronic typesetting, remaining
+        essentially unchanged. It was popularised in the 1960s with the release
+        of Letraset sheets containing Lorem Ipsum passages, and more recently
+        with desktop publishing software like Aldus PageMaker including versions
+        of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and
+        typesetting industry. Lorem Ipsum has been the industry's standard dummy
+        text ever since the 1500s, when an unknown printer took a galley of type
+        and scrambled it to make a type specimen book. It has survived not only
+        five centuries, but also the leap into electronic typesetting, remaining
+        essentially unchanged. It was popularised in the 1960s with the release
+        of Letraset sheets containing Lorem Ipsum passages, and more recently
+        with desktop publishing software like Aldus PageMaker including versions
+        of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and
+        typesetting industry. Lorem Ipsum has been the industry's standard dummy
+        text ever since the 1500s, when an unknown printer took a galley of type
+        and scrambled it to make a type specimen book. It has survived not only
+        five centuries, but also the leap into electronic typesetting, remaining
+        essentially unchanged. It was popularised in the 1960s with the release
+        of Letraset sheets containing Lorem Ipsum passages, and more recently
+        with desktop publishing software like Aldus PageMaker including versions
+        of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and
+        typesetting industry. Lorem Ipsum has been the industry's standard dummy
+        text ever since the 1500s, when an unknown printer took a galley of type
+        and scrambled it to make a type specimen book. It has survived not only
+        five centuries, but also the leap into electronic typesetting, remaining
+        essentially unchanged. It was popularised in the 1960s with the release
+        of Letraset sheets containing Lorem Ipsum passages, and more recently
+        with desktop publishing software like Aldus PageMaker including versions
+        of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and
+        typesetting industry. Lorem Ipsum has been the industry's standard dummy
+        text ever since the 1500s, when an unknown printer took a galley of type
+        and scrambled it to make a type specimen book. It has survived not only
+        five centuries, but also the leap into electronic typesetting, remaining
+        essentially unchanged. It was popularised in the 1960s with the release
+        of Letraset sheets containing Lorem Ipsum passages, and more recently
+        with desktop publishing software like Aldus PageMaker including versions
+        of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and
+        typesetting industry. Lorem Ipsum has been the industry's standard dummy
+        text ever since the 1500s, when an unknown printer took a galley of type
+        and scrambled it to make a type specimen book. It has survived not only
+        five centuries, but also the leap into electronic typesetting, remaining
+        essentially unchanged. It was popularised in the 1960s with the release
+        of Letraset sheets containing Lorem Ipsum passages, and more recently
+        with desktop publishing software like Aldus PageMaker including versions
+        of Lorem Ipsum. -->
       </p>
     </div>
+    <van-submit-bar
+      :loading="loading"
+      button-color="rgb(95, 130, 245)"
+      button-text="Borrow"
+      @submit="onClickBorrow"
+    />
   </div>
 </template>
 
@@ -49,7 +104,10 @@ import { defineComponent, onMounted, reactive, toRefs } from "vue";
 // @ts-ignore
 import Nav from "./../../../../components/CommonNav/index.vue";
 import { useRoute } from "vue-router";
-import { getBookDetails } from "./../../../../api/other";
+import { getBookDetails, borrowBook } from "./../../../../api/other";
+import { showConfirmDialog, showSuccessToast } from "vant";
+import { useUserStore } from "./../../../../store/useUserStore";
+
 export default defineComponent({
   name: "bookDetail",
   layout: "bookDetail",
@@ -57,23 +115,60 @@ export default defineComponent({
     Nav,
   },
   setup() {
+    const userStore = useUserStore();
+
     const route = useRoute();
     const state = reactive({
       bookDetial: {} as any,
+      borrow_count: 0,
       param: {
         uuid: route.query.id,
       },
       loading: false,
+      form: {
+        user_uuid: userStore.user.uuid,
+        book_uuid: route.query.id,
+        type: userStore.user.user_type,
+      },
     });
 
     const getBookDetail = () => {
       state.loading = true;
       getBookDetails(state.param).then((res) => {
         if (res.err_code == 0) {
-          state.bookDetial = res.data;
+          state.bookDetial = res.data.book_data;
+          state.borrow_count = res.data.borrow_count;
           state.loading = false;
         }
       });
+    };
+
+    const onClickBorrow = () => {
+      state.loading = true;
+      showConfirmDialog({
+        title: "Borrow Book",
+        message: "Are you sure want to borrow?",
+        confirmButtonText: "Sure",
+        cancelButtonText: "Cancel",
+        cancelButtonColor: "red",
+      })
+        .then(() => {
+          // on confirm
+          console.log(state.form);
+          borrowBook(state.form)
+            .then((res) => {
+              if (res.err_code == 0) {
+                showSuccessToast("Success");
+                state.loading = false;
+              }
+            })
+            .catch(() => {
+              state.loading = false;
+            });
+        })
+        .catch(() => {
+          state.loading = false;
+        });
     };
     onMounted(() => {
       getBookDetail();
@@ -81,6 +176,7 @@ export default defineComponent({
 
     return {
       ...toRefs(state),
+      onClickBorrow,
     };
   },
 });
@@ -104,8 +200,8 @@ export default defineComponent({
       .book-title {
         color: rgb(66, 66, 66);
         font-weight: 500;
-        font-size: px2rem(70);
-        line-height: px2rem(90);
+        font-size: px2rem(66);
+        line-height: px2rem(80);
         //text-transform: uppercase;
       }
       .foot {
@@ -141,7 +237,8 @@ export default defineComponent({
           height: 100%;
           display: block;
           margin: 0 auto;
-          object-fit: cover;
+          object-fit: contain;
+          box-shadow: 0px px2rem(5) px2rem(40) rgb(183, 183, 183);
         }
       }
     }
@@ -195,6 +292,11 @@ export default defineComponent({
       line-height: px2rem(50);
       margin-top: px2rem(30);
     }
+  }
+
+  :deep(.van-submit-bar__bar) {
+    box-shadow: 0px px2rem(5) px2rem(40) rgb(183, 183, 183);
+    padding: px2rem(10) px2rem(15) px2rem(15) px2rem(15) !important;
   }
 }
 </style>
