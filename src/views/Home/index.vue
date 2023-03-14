@@ -93,7 +93,7 @@ export default defineComponent({
       state.loading = true;
       getHomeBooks(state.params).then((res) => {
         if (res.err_code == 0) {
-          state.bookLists = state.bookLists.concat(res.data.list);
+          state.bookLists = state.bookLists.concat(res.data.list || []);
           state.totalPage =
             (res.data.total + state.params.page_size - 1) /
             state.params.page_size;
@@ -113,6 +113,7 @@ export default defineComponent({
     };
 
     const onConfirm = (data: any) => {
+      state.bookLists = [];
       state.showCategoryPicker = false;
       state.searchValue = data.selectedOptions[0].text;
       state.params.category_id = data.selectedValues[0];
@@ -192,13 +193,16 @@ export default defineComponent({
       background: rgba(239, 239, 239, 1);
       width: px2rem(380);
       margin-bottom: px2rem(30);
+      border-radius: px2rem(10);
 
       .cover-img-con {
         width: 100%;
         height: px2rem(500);
+        border-radius: px2rem(10) px2rem(10) px2rem(0) px2rem(0);
         .cover-img {
           width: 100%;
           height: 100%;
+          border-radius: px2rem(10) px2rem(10) px2rem(0) px2rem(0);
         }
       }
 

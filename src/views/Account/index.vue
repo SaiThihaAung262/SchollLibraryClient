@@ -31,7 +31,7 @@
     </div>
 
     <div class="logout-con">
-      <button class="logout-btn">Logout</button>
+      <button class="logout-btn" @click="logOut">Logout</button>
     </div>
   </div>
 </template>
@@ -48,6 +48,7 @@ import SwitchTheme from "./Components/switchTheme.vue";
 import { getUserDetail } from "./../../api/user";
 import { useUserStore } from "./../../store/useUserStore";
 import { useRouter } from "vue-router";
+import { showConfirmDialog } from "vant";
 
 export default defineComponent({
   name: "home",
@@ -114,12 +115,31 @@ export default defineComponent({
       });
     };
 
+    const logOut = () => {
+      showConfirmDialog({
+        title: "LogOut",
+        message: "Are you sure want to logout?",
+        confirmButtonText: "Sure",
+        cancelButtonText: "Cancel",
+        cancelButtonColor: "red",
+      })
+        .then(() => {
+          // on confirm
+          localStorage.clear();
+          router.push("/login");
+          userStore.user = {};
+        })
+        .catch(() => {
+          // on cancel
+        });
+    };
     onMounted(() => {
       getUserDetailData();
     });
     return {
       ...toRefs(state),
       goToPage,
+      logOut,
     };
   },
 });

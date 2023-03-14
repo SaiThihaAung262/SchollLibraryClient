@@ -63,7 +63,7 @@ export default defineComponent({
       state.loading = true;
       getBorrowHistory(state.param).then((res) => {
         if (res.err_code == 0) {
-          state.borrowHistory = state.borrowHistory.concat(res.data.list);
+          state.borrowHistory = state.borrowHistory.concat(res.data.list || []);
           state.totalPage =
             (res.data.total + state.param.page_size - 1) /
             state.param.page_size;

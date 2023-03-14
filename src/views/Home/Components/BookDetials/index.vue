@@ -7,12 +7,12 @@
         <div class="foot">
           <p class="book-author">By {{ bookDetial.author }}</p>
           <!-- <p class="publish-date">Available date: Auguest 28 2022</p> -->
-          <p class="available">
+          <!-- <p class="available">
             Available :
             <span class="ava-count">{{
               bookDetial.available_qty - bookDetial.borrow_qty
             }}</span>
-          </p>
+          </p> -->
         </div>
       </div>
       <div class="right-con">
@@ -28,8 +28,10 @@
         <p class="read-count">6000</p>
       </div>
       <div class="right-con">
-        <h2 class="chapter">Chapter</h2>
-        <p class="chapter-count">24</p>
+        <h2 class="chapter">Available</h2>
+        <p class="chapter-count">
+          {{ bookDetial.available_qty - bookDetial.borrow_qty }}
+        </p>
       </div>
     </div>
 
