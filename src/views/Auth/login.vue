@@ -7,8 +7,12 @@
       <div class="form">
         <div class="type-input">
           <van-radio-group v-model="form.type" direction="horizontal">
-            <van-radio :name="1">Teacher</van-radio>
-            <van-radio :name="2">Student</van-radio>
+            <van-radio :name="1"
+              ><span style="color: #fff">Teacher</span></van-radio
+            >
+            <van-radio :name="2"
+              ><span style="color: #fff">Student</span></van-radio
+            >
           </van-radio-group>
         </div>
         <div class="custom-input">
@@ -16,7 +20,7 @@
             <img src="./../../assets/images/user_icon.png" />
           </div>
           <div class="input">
-            <input type="text" v-model="form.name" placeholder="Username" />
+            <input type="text" v-model="form.email" placeholder="Email" />
           </div>
         </div>
         <div class="custom-input">
@@ -64,7 +68,7 @@ export default defineComponent({
     const state = reactive({
       form: {
         type: 1,
-        name: "",
+        email: "",
         password: "",
       },
       loading: false,
@@ -83,7 +87,7 @@ export default defineComponent({
     };
 
     onUpdated(() => {
-      if (state.form.name && state.form.password.length) {
+      if (state.form.email && state.form.password.length) {
         state.loginDisable = false;
       } else {
         state.loginDisable = true;
@@ -209,10 +213,10 @@ export default defineComponent({
   position: absolute;
   top: 0;
   left: 0;
-  //background-image: url("./../../assets/images/library.jpg");
+  background-image: url("./../../assets/images/lib_bg.jpeg");
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-  opacity: 0.5;
+  opacity: 1;
 }
 </style>
