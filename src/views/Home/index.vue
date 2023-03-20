@@ -52,7 +52,7 @@
 import { defineComponent, toRefs, reactive, onMounted, computed } from "vue";
 import { useHomeStore } from "../../store/useHomeStore";
 import { ArticleInfo } from "../../types/index";
-import { getHomeBooks, getBookCategories } from "../../api/other";
+import { getHomeBooks, getBookSubCategories } from "../../api/other";
 // @ts-ignore
 import Nav from "../../components/CommonNav/index.vue";
 import { useRouter, useRoute } from "vue-router";
@@ -104,10 +104,13 @@ export default defineComponent({
     };
 
     const getCategoryLists = () => {
-      getBookCategories(state.cateParam).then((res) => {
+      getBookSubCategories(state.cateParam).then((res) => {
         state.categories = res.data.list;
         state.categories.map((item: any) => {
-          state.categoryLists.push({ value: item.id, text: item.title });
+          state.categoryLists.push({
+            value: item.id,
+            text: item.sub_category_name,
+          });
         });
       });
     };

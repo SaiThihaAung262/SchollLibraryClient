@@ -7,6 +7,9 @@ export function getHomeBooks(params: any) {
 export function getBookCategories(params: any) {
   return get("/user/get-categories", params);
 }
+export function getBookSubCategories(params: any) {
+  return get("/user/get-sub-categories", params);
+}
 
 export function getBookDetails(params: any) {
   return get("/user/get-book-detail", params);
