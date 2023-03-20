@@ -70,25 +70,25 @@ export default defineComponent({
             .href,
           to: "/borrowHistory",
         },
-        {
-          name: "Change Languages",
-          icon: new URL(`./../../assets/images/language.png`, import.meta.url)
-            .href,
-          to: "/languages",
-        },
-        {
-          name: "Change Theme",
-          icon: new URL(`./../../assets/images/theme.png`, import.meta.url)
-            .href,
-          to: "/changeTheme",
-        },
+        // {
+        //   name: "Change Languages",
+        //   icon: new URL(`./../../assets/images/language.png`, import.meta.url)
+        //     .href,
+        //   to: "/languages",
+        // },
+        // {
+        //   name: "Change Theme",
+        //   icon: new URL(`./../../assets/images/theme.png`, import.meta.url)
+        //     .href,
+        //   to: "/changeTheme",
+        // },
         {
           name: "Change password",
           icon: new URL(
             `./../../assets/images/password_icon.png`,
             import.meta.url
           ).href,
-          to: "/changeTheme",
+          to: "/changePassword",
         },
       ],
       param: {

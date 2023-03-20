@@ -45,7 +45,7 @@ service.interceptors.response.use(
       showNotify(res.data.err_msg);
       return Promise.reject(res.data);
     }
-
+    // showNotify(res.data.err_msg);
     return res.data;
   },
   //Fail response

@@ -24,4 +24,10 @@ export const other: Array<RouteRecordRaw> = [
     name: "borrowHistory",
     component: () => import("../../views/Account/Components/borrowHistory.vue"),
   },
+  {
+    path: "/changePassword",
+    name: "changePassword",
+    component: () =>
+      import("../../views/Account/Components/changePassword.vue"),
+  },
 ];

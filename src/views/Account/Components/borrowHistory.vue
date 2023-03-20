@@ -23,6 +23,9 @@
             <van-tag type="success" size="large" v-if="item.status == 2"
               >Returned</van-tag
             >
+            <van-tag type="danger" size="large" v-if="item.status == 3"
+              >Expired</van-tag
+            >
           </div>
         </div>
       </van-list>

@@ -13,6 +13,9 @@
             <van-radio :name="2"
               ><span style="color: #fff">Student</span></van-radio
             >
+            <van-radio :name="3"
+              ><span style="color: #fff">Staff</span></van-radio
+            >
           </van-radio-group>
         </div>
         <div class="custom-input">
@@ -56,6 +59,7 @@ import { LoginData } from "../../types/index";
 import { useUserStore } from "../../store/useUserStore";
 import { login } from "./../../api/user";
 import { useRouter } from "vue-router";
+import { showNotify } from "vant";
 
 export default defineComponent({
   name: "login",
@@ -81,6 +85,7 @@ export default defineComponent({
         console.log(res);
         if (res.err_code == 0) {
           userStore.user = res.data;
+          showNotify({ type: "success", message: "Login Successful" });
           router.push("/");
         }
       });

@@ -7,3 +7,7 @@ export const login = (data: any) => {
 export function getUserDetail(params: any) {
   return get("/user/get-user", params);
 }
+
+export const changePassword = (data: any) => {
+  return post("/user/change-password", data);
+};

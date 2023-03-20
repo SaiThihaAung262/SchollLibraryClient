@@ -6,13 +6,12 @@
         <h1 class="book-title">{{ bookDetial.title }}</h1>
         <div class="foot">
           <p class="book-author">By {{ bookDetial.author }}</p>
-          <!-- <p class="publish-date">Available date: Auguest 28 2022</p> -->
-          <!-- <p class="available">
-            Available :
-            <span class="ava-count">{{
-              bookDetial.available_qty - bookDetial.borrow_qty
-            }}</span>
-          </p> -->
+          <p class="publish-date">
+            Punlish date: {{ bookDetial.publish_date }}
+          </p>
+          <p class="available" v-if="bookDetial.download_link != ''">
+            <a class="link" :href="bookDetial.download_link">Download here</a>
+          </p>
         </div>
       </div>
       <div class="right-con">
@@ -213,6 +212,9 @@ export default defineComponent({
             color: blue;
             font-size: px2rem(30);
             font-weight: bold;
+          }
+          .link {
+            color: rgb(28, 28, 255);
           }
         }
         .book-author {
