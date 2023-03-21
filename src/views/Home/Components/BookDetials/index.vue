@@ -281,6 +281,7 @@ export default defineComponent({
   .desc-con {
     width: 95%;
     margin: 0 auto;
+    padding-bottom: px2rem(150);
     .title {
       font-size: px2rem(40);
       color: rgb(66, 66, 66);

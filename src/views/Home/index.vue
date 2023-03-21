@@ -200,12 +200,13 @@ export default defineComponent({
 
       .cover-img-con {
         width: 100%;
-        height: px2rem(500);
+        height: px2rem(400);
         border-radius: px2rem(10) px2rem(10) px2rem(0) px2rem(0);
         .cover-img {
           width: 100%;
           height: 100%;
           border-radius: px2rem(10) px2rem(10) px2rem(0) px2rem(0);
+          object-fit: contain;
         }
       }
 
