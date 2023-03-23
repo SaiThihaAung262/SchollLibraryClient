@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <Nav title="UCSL Library" :left-arrow="false" />
+    <Nav title="UCS(Lashio) Library" :left-arrow="false" />
     <div class="filter-con">
       <van-field
         v-model="searchValue"
@@ -178,6 +178,7 @@ export default defineComponent({
     left: 50%;
     transform: translate(-50%, -50%);
     background: var(--home-bg);
+
     .category-field {
       width: 95%;
       margin: 0 auto;
